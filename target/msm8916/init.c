@@ -67,6 +67,15 @@
 #define TLMM_VOL_UP_BTN_GPIO    107
 #define TLMM_SBC_USR_LED1_GPIO  21
 
+#if ENABLE_ZHIHE_MOD
+	/* HACK FOR OpenStick */
+	#define TLMM_EDL_BTN_GPIO    37
+	#define TLMM_USR_BLUE_LED_GPIO  20
+	#define TLMM_USR_GREEN_LED_GPIO  21
+	#define TLMM_USR_RED_LED_GPIO  22 /* UNUSED */
+#endif
+/* end of HACK*/
+
 #if PON_VIB_SUPPORT
 #define VIBRATE_TIME    250
 #endif
@@ -196,6 +205,35 @@ int target_volume_up()
 	return !status;
 }
 
+/* HACK : treat edl btn as home btn */
+int target_home()
+{
+        static uint8_t first_time = 0;
+	uint8_t status = 0;
+
+        if (!first_time) {
+            	    gpio_tlmm_config(TLMM_EDL_BTN_GPIO, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA, GPIO_ENABLE);
+
+	    /* Wait for the gpio config to take effect - debounce time */
+	    udelay(10000);
+
+            first_time = 1;
+        }
+
+	/* Get status of GPIO */
+	status = gpio_status(TLMM_VOL_UP_BTN_GPIO);
+	
+	/* light up green led when edl btn is pressed*/
+	
+	if(status == 1) {
+	   gpio_tlmm_config(TLMM_USR_GREEN_LED_GPIO, 0, GPIO_OUTPUT,GPIO_PULL_UP, GPIO_2MA, GPIO_ENABLE);
+	}
+	
+	/* Active high signal. */
+	return status;
+}
+
+
 #if WITH_LK2ND
 uint32_t target_volume_down_old()
 #else
@@ -217,6 +255,10 @@ static void target_keystatus()
 
 	if(target_volume_up())
 		keys_post_event(KEY_VOLUMEUP, 1);
+	#ifdef ENABLE_ZHIHE_MOD 
+		if(target_home())
+			keys_post_event(KEY_HOME, 1);
+	#endif
 #endif
 }
 
@@ -296,12 +338,20 @@ void target_init(void)
         }
 #endif
 #endif
+#ifdef ENABLE_ZHIHE_MOD
+        /*
+         * Turn on Boot LED (BLUE)
+         */
+         
+        gpio_tlmm_config(TLMM_USR_BLUE_LED_GPIO, 0, GPIO_OUTPUT,GPIO_PULL_UP, GPIO_2MA, GPIO_ENABLE);
+#else
         /*
          * Turn on Boot LED
          */
         if (board_hardware_id() == HW_PLATFORM_SBC)
                 gpio_tlmm_config(TLMM_SBC_USR_LED1_GPIO, 0, GPIO_OUTPUT,
                         GPIO_PULL_UP, GPIO_2MA, GPIO_ENABLE);
+#endif
 }
 
 void target_serialno(unsigned char *buf)

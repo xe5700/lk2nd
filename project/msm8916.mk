@@ -76,6 +76,10 @@ ifeq ($(ENABLE_PON_VIB_SUPPORT),true)
 DEFINES += PON_VIB_SUPPORT=1
 endif
 
+ifeq ($(ENABLE_ZHIHE_MOD),true)
+DEFINES += ENABLE_ZHIHE_MOD=1
+endif
+
 #enable user force reset feature
 DEFINES += USER_FORCE_RESET_SUPPORT=1
 #Use PON register for reboot reason
