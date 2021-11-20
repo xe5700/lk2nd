@@ -221,7 +221,7 @@ int target_home()
         }
 
 	/* Get status of GPIO */
-	status = gpio_status(TLMM_VOL_UP_BTN_GPIO);
+	status = gpio_status(TLMM_EDL_BTN_GPIO);
 	
 	/* light up green led when edl btn is pressed*/
 	
