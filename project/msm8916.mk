@@ -76,8 +76,8 @@ ifeq ($(ENABLE_PON_VIB_SUPPORT),true)
 DEFINES += PON_VIB_SUPPORT=1
 endif
 
-ifeq ($(ENABLE_ZHIHE_MOD),true)
-DEFINES += ENABLE_ZHIHE_MOD=1
+ifeq ($(WITH_ZHIHE_SUPPORT),true)
+DEFINES += WITH_ZHIHE_SUPPORT=1
 endif
 
 #enable user force reset feature

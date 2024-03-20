@@ -67,7 +67,7 @@
 #define TLMM_VOL_UP_BTN_GPIO    107
 #define TLMM_SBC_USR_LED1_GPIO  21
 
-#if ENABLE_ZHIHE_MOD
+#if WITH_ZHIHE_SUPPORT
 	/* HACK FOR OpenStick */
 	#define TLMM_EDL_BTN_GPIO    37
 	#define TLMM_USR_BLUE_LED_GPIO  20
@@ -255,7 +255,7 @@ static void target_keystatus()
 
 	if(target_volume_up())
 		keys_post_event(KEY_VOLUMEUP, 1);
-	#ifdef ENABLE_ZHIHE_MOD 
+	#ifdef WITH_ZHIHE_SUPPORT 
 		if(target_home())
 			keys_post_event(KEY_HOME, 1);
 	#endif
@@ -338,7 +338,7 @@ void target_init(void)
         }
 #endif
 #endif
-#ifdef ENABLE_ZHIHE_MOD
+#ifdef WITH_ZHIHE_SUPPORT
         /*
          * Turn on Boot LED (BLUE)
          */
