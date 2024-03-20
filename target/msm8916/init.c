@@ -219,10 +219,13 @@ int target_home()
 
             first_time = 1;
         }
-
+		
+	#ifdef WITH_ZHIHE_SUPPORT
 	/* Get status of GPIO */
 	status = gpio_status(TLMM_EDL_BTN_GPIO);
-	
+	#else
+	status = gpio_status(TLMM_VOL_UP_BTN_GPIO);
+	#endif
 	/* light up green led when edl btn is pressed*/
 	
 	if(status == 1) {
